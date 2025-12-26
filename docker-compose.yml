@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db_task:
+    image: postgres:15.2
+    volumes:
+      - pg-data-task:/var/lib/postgresql/data/pgdata
+    environment:
+      - POSTGRES_DB=db_task
+      - POSTGRES_USER=task_admin
+      - POSTGRES_PASSWORD=kDcRDuba-4ZPfZB
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+volumes:
+  pg-data-task:
+networks:
+  app-network:
+    external: true
+    name: app-network
