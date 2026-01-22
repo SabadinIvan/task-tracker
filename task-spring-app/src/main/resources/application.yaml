@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: app-spring
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_task
+    username: task_admin
+    password: kDcRDuba-4ZPfZB
+    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      ddl-auto: create
+#      show-sql: true
+application:
+  security:
+    jwt:
+      secret-key: zjfDqx2yHCcB8rI0yqdmBdOuWd6cR2JuoTXLNy7Z30a
+      # in milliseconds (24 hours)
+#      expiration: 86400000
+      # in milliseconds (5 mins)
+      expiration: 300000
+      refresh-token: 604800000
+

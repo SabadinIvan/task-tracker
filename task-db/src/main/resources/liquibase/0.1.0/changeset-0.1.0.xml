@@ -15,10 +15,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="first_name" remarks="Имя пользователя" type="java.sql.Types.VARCHAR">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="last_name" remarks="Фамилия пользователя" type="java.sql.Types.VARCHAR">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="middle_name" remarks="Отчество пользователя" type="java.sql.Types.VARCHAR">
                 <constraints nullable="true"/>
@@ -44,12 +44,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="password_hash" remarks="Хэш пароля" type="java.sql.Types.VARCHAR(256)"/>
-            <column name="is_active" remarks="Актуальность" type="java.sql.Types.BOOLEAN" defaultValueBoolean="true">
-                <constraints nullable="false"/>
-            </column>
+<!--            <column name="is_active" remarks="Актуальность" type="java.sql.Types.BOOLEAN" defaultValueBoolean="true">-->
+<!--                <constraints nullable="false"/>-->
+<!--            </column>-->
         </createTable>
         <addUniqueConstraint constraintName="UQ_USER_LOGONS"
-                             tableName="SEC_USER_LOGONS" columnNames="logon_name"/>
+                             tableName="sec_user_logons" columnNames="logon_name"/>
         <sql dbms="postgresql">select setval('sec_user_logons_id_seq', ${id.start.value});</sql>
     </changeSet>
 
