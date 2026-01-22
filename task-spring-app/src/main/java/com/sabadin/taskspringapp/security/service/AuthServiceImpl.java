@@ -1,12 +1,11 @@
 package com.sabadin.taskspringapp.security.service;
 
-import com.sabadin.taskspringapp.security.jwt.JwtTokenUtil;
-import com.sabadin.taskspringapp.security.model.dto.LoginRequestDto;
-import com.sabadin.taskspringapp.security.model.dto.SignupRequestDto;
-import com.sabadin.taskspringapp.security.model.dto.UserAuthResponse;
+import com.sabadin.taskspringapp.security.jwt.JwtService;
+import com.sabadin.taskspringapp.security.model.dto.*;
+import com.sabadin.taskspringapp.security.model.entity.Role;
 import com.sabadin.taskspringapp.security.model.entity.User;
-import com.sabadin.taskspringapp.security.model.entity.UserLogon;
-import lombok.AllArgsConstructor;
+import com.sabadin.taskspringapp.security.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,84 +14,48 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+    private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final UserService userService;
+    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtil jwtTokenUtil;
 
-    @Override
-    public void userSignup(SignupRequestDto dto) {
-        log.info("called AuthServiceImpl -> userSignup");
-        UserLogon userLogon = createUser(dto);
-        log.info("userLogon -> " + userLogon);
+    public AuthResponse register(RegisterRequest request) {
+        // По умолчанию создаем пользователя с ролью USER, если не указано иное
+        Role role = (request.getRole() != null) ? request.getRole() : Role.ROLE_USER;
 
-
-//        User user = getUserBySignupRequestDtoAndUserLogon(dto);
-//        User savedUser = userService.save(user);
-//        UserLogon userLogon = getUserLogonBySignupRequestDto(dto, savedUser);
-//        UserLogon savedUserLogon = userDetailsService.save(userLogon);
-//        authenticate(dto.getLogonName(), dto.getPassword());
-//        return getUserAuthResponse(userLogon);
+        var user = User.builder()
+                .version(1)
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .middleName(request.getMiddleName())
+                .email(request.getEmail())
+                .logonName(request.getLogonName())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(role)
+                .isActive(true)
+                .build();
+        repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
-    @Override
-    public UserAuthResponse userLogin(LoginRequestDto dto) {
-        log.info("called AuthServiceImpl -> userLogin");
-        authenticate(dto.getLogonName(), dto.getPassword());
-        UserLogon userLogon = (UserLogon) userDetailsService.loadUserByUsername(dto.getLogonName());
-        return getUserAuthResponse(userLogon);
-    }
-
-    private UserLogon createUser(SignupRequestDto dto) {
-        User user = new User();
-        user.setVersion(1);
-        user.setFirstName(dto.getFirstName());
-        user.setLastName(dto.getLastName());
-        user.setMiddleName(dto.getMiddleName());
-        user.setEmail(dto.getEmail());
-        User savedUser = userService.save(user);
-        UserLogon userLogon = new UserLogon();
-        userLogon.setVersion(1);
-        userLogon.setLogonName(dto.getLogonName());
-        userLogon.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
-        userLogon.setUser(savedUser);
-        return userDetailsService.save(userLogon);
-    }
-
-    private UserLogon getUserLogonBySignupRequestDto(SignupRequestDto dto, User user) {
-        UserLogon userLogon = new UserLogon();
-        userLogon.setVersion(1);
-        userLogon.setLogonName(dto.getLogonName());
-        userLogon.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
-        userLogon.setUser(user);
-        return  userLogon;
-    }
-
-    private User getUserBySignupRequestDtoAndUserLogon(SignupRequestDto dto) {
-        User user = new User();
-        user.setEmail(dto.getEmail());
-        user.setVersion(1);
-        return user;
-    }
-
-    private void authenticate(String logonName, String password) {
-        log.info("calling AuthService -> authenticate");
+    public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(logonName, password)
+                new UsernamePasswordAuthenticationToken(
+                        request.getLogonName(),
+                        request.getPassword()
+                )
         );
-    }
-
-    private UserAuthResponse getUserAuthResponse(UserLogon userLogon) {
-        var jwtToken = jwtTokenUtil.generateJwtToken(userLogon);
-        var refreshToken = jwtTokenUtil.generateRefreshJwtToken(userLogon);
-        return UserAuthResponse.builder()
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .logonName(userLogon.getLogonName())
+        var user = repository.findByLogonName(request.getLogonName())
+                .orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        return AuthResponse.builder()
+                .token(jwtToken)
                 .build();
     }
 }

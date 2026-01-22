@@ -1,51 +1,33 @@
 package com.sabadin.taskspringapp.security.controller;
 
-import com.sabadin.taskspringapp.security.model.dto.LoginRequestDto;
-import com.sabadin.taskspringapp.security.model.dto.SignupRequestDto;
-import com.sabadin.taskspringapp.security.model.dto.UserAuthResponse;
+import com.sabadin.taskspringapp.security.model.dto.AuthRequest;
+import com.sabadin.taskspringapp.security.model.dto.AuthResponse;
+import com.sabadin.taskspringapp.security.model.dto.RegisterRequest;
 import com.sabadin.taskspringapp.security.service.AuthService;
-import com.sabadin.taskspringapp.security.service.UserDetailsServiceImpl;
-import com.sabadin.taskspringapp.security.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
-@AllArgsConstructor
-//@CrossOrigin(origins = "*")
+@RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-
     private final AuthService authService;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final UserService userService;
 
-    @PostMapping("/signup")
-    public ResponseEntity<String> userSignup(@RequestBody SignupRequestDto request) {
-        log.info("called AuthController -> userSignup; user logon name -> {}", request.getLogonName());
-        try {
-            if (userDetailsService.iExistsByLogonName(request.getLogonName())) {
-                return ResponseEntity.badRequest().body("LogonName is already taken");
-            }
-            if (userService.isExistEmail(request.getEmail())) {
-                return ResponseEntity.badRequest().body("Email is already taken");
-            }
-            authService.userSignup(request);
-            log.info("User {} has been registered", request.getLogonName());
-            return ResponseEntity.ok("User signed up successfully");
-        } catch(Exception e) {
-            return ResponseEntity.internalServerError().body("Failed to register User");
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to register User");
-        }
+    @PostMapping("/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+        log.info("Was called AuthController -> register (/api/auth/register); request -> " + request);
+        return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserAuthResponse> userLogin(@RequestBody LoginRequestDto request) {
-        log.info("called AuthController -> userLogin");
-        UserAuthResponse response = authService.userLogin(request);
-        log.info("response -> " + response);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        log.info("Was called AuthController -> login (/api/auth/login); request -> " + request);
+        return ResponseEntity.ok(authService.authenticate(request));
     }
 }

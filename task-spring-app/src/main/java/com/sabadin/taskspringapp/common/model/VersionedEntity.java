@@ -1,14 +1,16 @@
 package com.sabadin.taskspringapp.common.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @MappedSuperclass
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class VersionedEntity {
 
     @Id

@@ -16,8 +16,8 @@ application:
     jwt:
       secret-key: zjfDqx2yHCcB8rI0yqdmBdOuWd6cR2JuoTXLNy7Z30a
       # in milliseconds (24 hours)
-#      expiration: 86400000
+      expiration: 86400000
       # in milliseconds (5 mins)
-      expiration: 300000
+#      expiration: 300000
       refresh-token: 604800000
 
