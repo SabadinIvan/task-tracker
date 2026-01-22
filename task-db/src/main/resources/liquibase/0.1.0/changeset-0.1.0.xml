@@ -84,6 +84,9 @@
             <column name="title" remarks="Наименование (заголовок) задачи" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
+            <column name="description" remarks="Описание задачи" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
             <column name="executor_id" remarks="Внешний идентификатор исполнителя задачи" type="java.sql.Types.VARCHAR">
                 <constraints nullable="true"/>
             </column>
