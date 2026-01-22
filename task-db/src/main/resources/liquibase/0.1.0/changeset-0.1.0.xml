@@ -42,4 +42,56 @@
         <sql dbms="postgresql">select setval('sec_users_id_seq', ${id.start.value});</sql>
     </changeSet>
 
+    <changeSet id="2026-01-22 creating task entity" author="Sabadin Ivan" context="dev">
+        <createTable tableName="tsk_comments" remarks="Комментарий к задаче">
+            <column name="id" remarks="Идентификатор сущности" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_tsk_comment"/>
+            </column>
+            <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" remarks="Дата создания" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" remarks="Внешний идентификатор автора комментария" type="java.sql.Types.BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task_id" remarks="Внешний идентификатор задачи" type="java.sql.Types.BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" remarks="Комментарий к задаче" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" remarks="Актуальность" type="java.sql.Types.BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql dbms="postgresql">select setval('tsk_comments_id_seq', ${id.start.value});</sql>
+
+        <createTable tableName="tsk_tasks" remarks="Сущность задачи">
+            <column name="id" remarks="Идентификатор сущности" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_tsk_task"/>
+            </column>
+            <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" remarks="Дата создания" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="initiator_id" remarks="Внешний идентификатор инициатора задачи" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" remarks="Наименование (заголовок) задачи" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="executor_id" remarks="Внешний идентификатор исполнителя задачи" type="java.sql.Types.VARCHAR">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" remarks="Статус задачи" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql dbms="postgresql">select setval('tsk_tasks_id_seq', ${id.start.value});</sql>
+    </changeSet>
+
 </databaseChangeLog>
