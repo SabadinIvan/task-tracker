@@ -1,0 +1,40 @@
+package com.sabadin.taskspringapp.task.model.entity;
+
+import com.sabadin.taskspringapp.common.model.VersionedEntity;
+import com.sabadin.taskspringapp.security.model.entity.User;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.util.Date;
+
+@Entity
+@Table(name = "tsk_tasks")
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Task extends VersionedEntity {
+
+    @Column(name = "created_date")
+    private Date createdDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "initiator_id", nullable = false)
+    private User initiator;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "executor_id", nullable = true)
+    private User executor;
+
+    @Column(name = "status")
+    private String status;
+}
