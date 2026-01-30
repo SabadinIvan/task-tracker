@@ -13,3 +13,12 @@ application:
       expiration: 86400000
       refresh-token: 604800000
 
+# Базовые настройки и настройки документации openapi
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none

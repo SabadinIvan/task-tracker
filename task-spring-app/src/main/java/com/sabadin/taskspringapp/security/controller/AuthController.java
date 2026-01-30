@@ -4,6 +4,7 @@ import com.sabadin.taskspringapp.security.model.dto.AuthRequest;
 import com.sabadin.taskspringapp.security.model.dto.AuthResponse;
 import com.sabadin.taskspringapp.security.model.dto.RegisterRequest;
 import com.sabadin.taskspringapp.security.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,20 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
+    @Operation(
+            summary = "Зарегистрировать пользователя",
+            description = "Данный метод регистрирует нового пользователя, возвращает token"
+    )
     public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         log.info("Was called AuthController -> register (/api/auth/register); request -> " + request);
         return ResponseEntity.ok(authService.register(request));
     }
 
     @PostMapping("/login")
+    @Operation(
+            summary = "Авторизоваться пользователем",
+            description = "Данный метод авторизует пользователя, возвращает token"
+    )
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
         log.info("Was called AuthController -> login (/api/auth/login); request -> " + request);
         return ResponseEntity.ok(authService.authenticate(request));
