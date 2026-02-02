@@ -3,6 +3,7 @@ package com.sabadin.taskspringapp.task.controller;
 import com.sabadin.taskspringapp.task.model.dto.TaskCommentDto;
 import com.sabadin.taskspringapp.task.model.dto.TaskDto;
 import com.sabadin.taskspringapp.task.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,10 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Получить задачу",
+            description = "Данный метод отдает задачу по ее идентификатору"
+    )
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
         log.info("called TaskController -> getTaskById (/api/tasks/{id}); id -> {}", id);
         TaskDto result = taskService.getTaskDtoById(id);
@@ -26,6 +31,10 @@ public class TaskController {
 
     @PostMapping("/task")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(
+            summary = "Создать задачу",
+            description = "Данный метод создает новую задачу"
+    )
     public ResponseEntity<?> createTask(@RequestBody TaskDto request) {
         log.info("called TaskController -> createTask (/api/tasks/task); request -> {}", request);
         TaskDto result = taskService.createTask(request);
@@ -33,6 +42,10 @@ public class TaskController {
     }
 
     @PostMapping("/comment")
+    @Operation(
+            summary = "Добавить комментарий к задаче",
+            description = "Данный метод добавляет комментарий к задаче"
+    )
     public ResponseEntity<TaskCommentDto> createComment(@RequestBody TaskCommentDto request) {
         log.info("called TaskController -> createComment (/api/tasks/comment); request -> {}", request);
         TaskCommentDto result = taskService.createTaskComment(request);

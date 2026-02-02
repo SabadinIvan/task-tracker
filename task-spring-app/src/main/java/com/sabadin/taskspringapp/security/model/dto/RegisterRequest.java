@@ -14,7 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @Schema(description = "Имя пользователя", example = "Иван")
+    @Schema(
+            description = "Имя пользователя",
+            name = "firstName",
+            type = "String",
+            example = "Иван")
     private String firstName;
     @Schema(description = "Фамилия пользователя", example = "Иванов")
     private String lastName;
