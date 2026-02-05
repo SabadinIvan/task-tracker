@@ -1,5 +1,7 @@
 package com.sabadin.taskspringapp.security.service;
 
+import com.sabadin.taskspringapp.security.exception.LogonNameAlreadyExistsException;
+import com.sabadin.taskspringapp.security.exception.UserAlreadyExistsException;
 import com.sabadin.taskspringapp.security.jwt.JwtService;
 import com.sabadin.taskspringapp.security.model.dto.*;
 import com.sabadin.taskspringapp.security.model.entity.Role;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
+        if (repository.existsByEmail(request.getEmail())) {
+            throw new UserAlreadyExistsException("Email already registered");
+        }
+        if (repository.existsByLogonName(request.getLogonName())) {
+            throw new LogonNameAlreadyExistsException("Logon name already taken");
+        }
         // По умолчанию создаем пользователя с ролью USER, если не указано иное
         Role role = (request.getRole() != null) ? request.getRole() : Role.ROLE_USER;
 
@@ -37,11 +46,9 @@ public class AuthServiceImpl implements AuthService {
                 .role(role)
                 .isActive(true)
                 .build();
-        repository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthResponse.builder()
-                .token(jwtToken)
-                .build();
+        User savedUser = repository.save(user);
+        var jwtToken = jwtService.generateToken(savedUser);
+        return new AuthResponse(jwtToken);
     }
 
     public AuthResponse authenticate(AuthRequest request) {
@@ -51,8 +58,17 @@ public class AuthServiceImpl implements AuthService {
                         request.getPassword()
                 )
         );
-        var user = repository.findByLogonName(request.getLogonName())
-                .orElseThrow();
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getLogonName(),
+                        request.getPassword()
+                )
+        );
+        User user = (User) authentication.getPrincipal();
+
+//        var user = repository.findByLogonName(request.getLogonName())
+//                .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
