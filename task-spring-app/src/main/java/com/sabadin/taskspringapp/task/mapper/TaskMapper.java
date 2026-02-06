@@ -3,8 +3,10 @@ package com.sabadin.taskspringapp.task.mapper;
 import com.sabadin.taskspringapp.task.model.dto.TaskDto;
 import com.sabadin.taskspringapp.task.model.entity.Task;
 import com.sabadin.taskspringapp.user.mapper.UserMapper;
-import org.springframework.scheduling.support.ScheduledTaskObservationDocumentation;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TaskMapper {
@@ -28,6 +30,14 @@ public class TaskMapper {
         task.setDescription(dto.getDescription());
         task.setStatus(dto.getStatus());
         return task;
+    }
+
+    public static List<TaskDto> createListFromTaskEntities(List<Task> entities) {
+        return entities.stream().map(TaskMapper::createFromTaskEntity).collect(Collectors.toList());
+    }
+
+    public static List<Task> createListFromTaskDto(List<TaskDto> dtos) {
+        return dtos.stream().map(TaskMapper::createFromTaskDto).collect(Collectors.toList());
     }
 }
 
