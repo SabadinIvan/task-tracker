@@ -3,6 +3,7 @@ package com.sabadin.taskspringapp.team.controller;
 import com.sabadin.taskspringapp.team.model.dto.TeamRequestDto;
 import com.sabadin.taskspringapp.team.model.dto.TeamResponseDto;
 import com.sabadin.taskspringapp.team.service.TeamService;
+import com.sabadin.taskspringapp.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class TeamController {
 
     private final TeamService teamService;
+    private final UserService userService;
 
     @PostMapping
     @Operation(
@@ -24,7 +26,7 @@ public class TeamController {
     )
     public ResponseEntity<TeamResponseDto> createNewTeam(@RequestBody TeamRequestDto dto) {
         log.info("Called TeamController -> createNewTeam; dto -> {}", dto);
-        TeamResponseDto teamResponseDto = teamService.createNewTeam();
+        TeamResponseDto teamResponseDto = teamService.createNewTeam(userService.getCurrentUser());
         log.info("Created team -> {}", teamResponseDto);
         return ResponseEntity.status(HttpStatus.CREATED) .body(teamResponseDto);
     }

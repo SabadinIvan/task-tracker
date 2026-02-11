@@ -11,7 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -19,7 +21,7 @@ import java.util.Date;
 public class TeamService {
 
     private final TeamRepository teamRepository;
-    private final UserService userService;
+//    private final UserService userService;
 
     public Team createNewTeamViaNewUser(User user) {
         Team team = new Team();
@@ -28,12 +30,15 @@ public class TeamService {
         team.setCreator(user);
         team.setTitleTeam(user.getLogonName() + "_solo_team");
         team.setTypeTeam(TypeTeam.SOLO);
+        List<User> users = new ArrayList<>();
+        users.add(user);
+        team.setUsers(users);
         team.setActive(true);
         return teamRepository.save(team);
     }
 
-    public TeamResponseDto createNewTeam() {
-        User user = userService.getCurrentUser();
+    public TeamResponseDto createNewTeam(User user) {
+//        User user = userService.getCurrentUser();
         Team team = new Team();
         team.setVersion(1);
         team.setCreatedDate(new Date(System.currentTimeMillis()));

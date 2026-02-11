@@ -124,4 +124,19 @@
         <sql dbms="postgresql">select setval('tm_teams_id_seq', ${id.start.value});</sql>
     </changeSet>
 
+    <changeSet id="2026-02-11" author="Sabadin Ivan">
+    <createTable tableName="rel_teams_users" remarks="Связь: команда и пользователь">
+        <column name="rel_team_id" remarks="Идентификатор команды" type="java.sql.Types.BIGINT">
+            <constraints primaryKey="true" primaryKeyName="pk_rel_team_user"
+                         foreignKeyName="fk_team_id"
+                         referencedTableName="tm_teams" referencedColumnNames="id"/>
+        </column>
+        <column name="rel_user_id" remarks="Идентификатор пользователя" type="java.sql.Types.BIGINT">
+            <constraints primaryKey="true" primaryKeyName="pk_rel_team_user"
+                         foreignKeyName="fk_user_id"
+                         referencedTableName="sec_users" referencedColumnNames="id"/>
+        </column>
+    </createTable>
+</changeSet>
+
 </databaseChangeLog>

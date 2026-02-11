@@ -1,6 +1,7 @@
 package com.sabadin.taskspringapp.security.model.entity;
 
 import com.sabadin.taskspringapp.common.model.VersionedEntity;
+import com.sabadin.taskspringapp.team.model.entity.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,6 +43,9 @@ public class User extends VersionedEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Team> teams;
 
     @Column(name = "is_active")
     private boolean isActive;
