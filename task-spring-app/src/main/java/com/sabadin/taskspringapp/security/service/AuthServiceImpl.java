@@ -7,6 +7,7 @@ import com.sabadin.taskspringapp.security.model.dto.*;
 import com.sabadin.taskspringapp.security.model.entity.Role;
 import com.sabadin.taskspringapp.security.model.entity.User;
 import com.sabadin.taskspringapp.security.repository.UserRepository;
+import com.sabadin.taskspringapp.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,44 +21,23 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
-        if (repository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyExistsException("Email already registered");
-        }
-        if (repository.existsByLogonName(request.getLogonName())) {
-            throw new LogonNameAlreadyExistsException("Logon name already taken");
-        }
-        // По умолчанию создаем пользователя с ролью USER, если не указано иное
-        Role role = (request.getRole() != null) ? request.getRole() : Role.ROLE_USER;
-
-        var user = User.builder()
-                .version(1)
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
-                .middleName(request.getMiddleName())
-                .email(request.getEmail())
-                .logonName(request.getLogonName())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(role)
-                .isActive(true)
-                .build();
-        User savedUser = repository.save(user);
+        User savedUser = userService.createNewUser(request);
         var jwtToken = jwtService.generateToken(savedUser);
         return new AuthResponse(jwtToken);
     }
 
     public AuthResponse authenticate(AuthRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getLogonName(),
-                        request.getPassword()
-                )
-        );
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        request.getLogonName(),
+//                        request.getPassword()
+//                )
+//        );
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

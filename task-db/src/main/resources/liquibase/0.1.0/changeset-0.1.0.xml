@@ -97,4 +97,31 @@
         <sql dbms="postgresql">select setval('tsk_tasks_id_seq', ${id.start.value});</sql>
     </changeSet>
 
+    <changeSet id="2026-02-06 creating team entity" author="Sabadin Ivan" context="dev">
+        <createTable tableName="tm_team" remarks="Сущность команды">
+            <column name="id" remarks="Идентификатор сущности" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_tm_team"/>
+            </column>
+            <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" remarks="Дата создания сущности" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_id" remarks="Внешний идентификатор создателя команды" type="java.sql.Types.BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title_team" remarks="Наименование (заголовок) команды" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type_team" remarks="Тип команды (SOLO(1), SMALL(2-5), TEAM(6+))" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" remarks="Актуальность" type="java.sql.Types.BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <sql dbms="postgresql">select setval('tm_team_id_seq', ${id.start.value});</sql>
+    </changeSet>
+
 </databaseChangeLog>
