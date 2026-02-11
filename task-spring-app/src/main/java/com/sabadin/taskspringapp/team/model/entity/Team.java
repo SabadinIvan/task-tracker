@@ -8,7 +8,7 @@ import lombok.Data;
 
 import java.util.Date;
 
-@Entity(name = "tm_team")
+@Entity(name = "tm_teams")
 @Data
 public class Team extends VersionedEntity {
 
