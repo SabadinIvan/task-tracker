@@ -22,11 +22,14 @@ public enum TaskStatus {
     }
 
     public static TaskStatus from(@Nonnull String title) {
+        if (title == null) {
+            return NEW;
+        }
         for (TaskStatus value : values()) {
             if (value.getTitle().equals(title)) {
                 return value;
             }
         }
-        throw new IllegalArgumentException(title + "can not be converted to " + TaskStatus.class.getSimpleName());
+        throw new IllegalArgumentException(title + " can not be converted to " + TaskStatus.class.getSimpleName());
     }
 }

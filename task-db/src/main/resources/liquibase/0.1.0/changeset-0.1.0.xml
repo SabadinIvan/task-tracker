@@ -14,6 +14,12 @@
             <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
                 <constraints nullable="false"/>
             </column>
+            <column name="create_at" remarks="Дата создания версии сущности" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
             <column name="first_name" remarks="Имя пользователя" type="java.sql.Types.VARCHAR">
                 <constraints nullable="true"/>
             </column>
@@ -50,6 +56,12 @@
             <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
                 <constraints nullable="false"/>
             </column>
+            <column name="create_at" remarks="Дата создания версии сущности" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
             <column name="created_date" remarks="Дата создания" type="timestamp">
                 <constraints nullable="false"/>
             </column>
@@ -73,6 +85,12 @@
                 <constraints primaryKey="true" primaryKeyName="pk_tsk_task"/>
             </column>
             <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_at" remarks="Дата создания версии сущности" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" remarks="Дата создания" type="timestamp">
@@ -103,6 +121,12 @@
                 <constraints primaryKey="true" primaryKeyName="pk_tm_team"/>
             </column>
             <column name="version" remarks="Версия сущности" type="java.sql.Types.INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_at" remarks="Дата создания версии сущности" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" remarks="Дата создания сущности" type="timestamp">
