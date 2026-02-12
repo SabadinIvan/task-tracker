@@ -8,9 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
 @Entity
 @Table(name = "tsk_comments")
 @Data
@@ -18,9 +15,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskComment extends VersionedEntity {
-
-    @Column(name = "created_date")
-    private Date createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)

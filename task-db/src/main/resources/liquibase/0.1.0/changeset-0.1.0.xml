@@ -62,9 +62,6 @@
             <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_date" remarks="Дата создания" type="timestamp">
-                <constraints nullable="false"/>
-            </column>
             <column name="author_id" remarks="Внешний идентификатор автора комментария" type="java.sql.Types.BIGINT">
                 <constraints nullable="false"/>
             </column>
@@ -91,9 +88,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_date" remarks="Дата создания" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="initiator_id" remarks="Внешний идентификатор инициатора задачи" type="java.sql.Types.VARCHAR">
@@ -127,9 +121,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
-                <constraints nullable="false"/>
-            </column>
-            <column name="created_date" remarks="Дата создания сущности" type="timestamp">
                 <constraints nullable="false"/>
             </column>
             <column name="creator_id" remarks="Внешний идентификатор создателя команды" type="java.sql.Types.BIGINT">

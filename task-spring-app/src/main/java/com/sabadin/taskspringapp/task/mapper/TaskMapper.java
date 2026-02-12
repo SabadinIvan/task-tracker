@@ -16,7 +16,6 @@ public class TaskMapper {
         TaskDto taskDto = new TaskDto();
         taskDto.setId(entity.getId());
         taskDto.setVersion(entity.getVersion());
-        taskDto.setCreatedDate(entity.getCreatedDate());
         taskDto.setInitiator(UserMapper.createFromUserEntity(entity.getInitiator()));
         taskDto.setTitle(entity.getTitle());
         taskDto.setDescription(entity.getDescription());

@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +45,6 @@ public class TaskService {
     private Task createNewVersionTask(Task task) {
         return Task.builder()
                 .version(task.getVersion() + 1)
-                .createdDate(new Date(System.currentTimeMillis()))
                 .initiator(userService.getCurrentUser())
                 .title(task.getTitle())
                 .description(task.getDescription())
@@ -58,7 +56,6 @@ public class TaskService {
         User initiator = userService.getCurrentUser();
         Task task = TaskMapper.createFromTaskDto(dto);
         task.setVersion(1);
-        task.setCreatedDate(new Date(System.currentTimeMillis()));
         task.setInitiator(initiator);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.createFromTaskEntity(savedTask);
@@ -69,7 +66,6 @@ public class TaskService {
         User author = userService.getCurrentUser();
         TaskComment taskComment = TaskCommentMapper.createFromTaskCommentDto(dto);
         taskComment.setVersion(1);
-        taskComment.setCreatedDate(new Date(System.currentTimeMillis()));
         taskComment.setAuthor(author);
         taskComment.setTask(task);
         TaskComment savedTaskComment = taskCommentRepository.save(taskComment);

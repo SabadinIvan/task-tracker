@@ -5,15 +5,11 @@ import com.sabadin.taskspringapp.security.model.entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 @Entity(name = "tm_teams")
 @Data
 public class Team extends VersionedEntity {
-
-    @Column(name = "created_date")
-    private Date createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id", nullable = false)

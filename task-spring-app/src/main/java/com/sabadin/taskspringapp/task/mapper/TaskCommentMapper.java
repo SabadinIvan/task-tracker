@@ -18,7 +18,6 @@ public class TaskCommentMapper {
         TaskCommentDto taskCommentDto = new TaskCommentDto();
         taskCommentDto.setId(taskCommentDto.getId());
         taskCommentDto.setVersion(entity.getVersion());
-        taskCommentDto.setCreatedDate(entity.getCreatedDate());
         taskCommentDto.setAuthor(UserMapper.createFromUserEntity(entity.getAuthor()));
         taskCommentDto.setTaskId(taskCommentDto.getTaskId());
         taskCommentDto.setComment(entity.getComment());

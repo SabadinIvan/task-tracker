@@ -26,7 +26,6 @@ public class TeamService {
     public Team createNewTeamViaNewUser(User user) {
         Team team = new Team();
         team.setVersion(1);
-        team.setCreatedDate(new Date(System.currentTimeMillis()));
         team.setCreator(user);
         team.setTitleTeam(user.getLogonName() + "_solo_team");
         team.setTypeTeam(TypeTeam.SOLO);
@@ -41,7 +40,6 @@ public class TeamService {
 //        User user = userService.getCurrentUser();
         Team team = new Team();
         team.setVersion(1);
-        team.setCreatedDate(new Date(System.currentTimeMillis()));
         team.setCreator(user);
         team.setTitleTeam(user.getLogonName() + "_small_team");
         team.setTypeTeam(TypeTeam.SMALL);

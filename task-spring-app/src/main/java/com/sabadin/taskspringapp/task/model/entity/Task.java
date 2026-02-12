@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
-
 @Entity
 @Table(name = "tsk_tasks")
 @Data
@@ -17,9 +15,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task extends VersionedEntity {
-
-    @Column(name = "created_date")
-    private Date createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id", nullable = false)
