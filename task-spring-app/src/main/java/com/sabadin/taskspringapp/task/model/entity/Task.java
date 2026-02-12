@@ -35,6 +35,7 @@ public class Task extends VersionedEntity {
     @JoinColumn(name = "executor_id", nullable = true)
     private User executor;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private TaskStatus status;
 }

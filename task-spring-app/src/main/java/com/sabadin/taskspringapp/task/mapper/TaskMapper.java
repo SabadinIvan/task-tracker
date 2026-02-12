@@ -2,6 +2,7 @@ package com.sabadin.taskspringapp.task.mapper;
 
 import com.sabadin.taskspringapp.task.model.dto.TaskDto;
 import com.sabadin.taskspringapp.task.model.entity.Task;
+import com.sabadin.taskspringapp.task.model.entity.TaskStatus;
 import com.sabadin.taskspringapp.user.mapper.UserMapper;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class TaskMapper {
         taskDto.setTitle(entity.getTitle());
         taskDto.setDescription(entity.getDescription());
         taskDto.setExecutor(UserMapper.createFromUserEntity(entity.getExecutor()));
-        taskDto.setStatus(entity.getStatus());
+        taskDto.setStatus(entity.getStatus().name());
         return taskDto;
     }
 
@@ -28,7 +29,7 @@ public class TaskMapper {
         Task task = new Task();
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());
-        task.setStatus(dto.getStatus());
+        task.setStatus(TaskStatus.from(dto.getStatus()));
         return task;
     }
 

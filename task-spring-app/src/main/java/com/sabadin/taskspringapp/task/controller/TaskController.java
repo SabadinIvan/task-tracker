@@ -2,6 +2,7 @@ package com.sabadin.taskspringapp.task.controller;
 
 import com.sabadin.taskspringapp.task.model.dto.TaskCommentDto;
 import com.sabadin.taskspringapp.task.model.dto.TaskDto;
+import com.sabadin.taskspringapp.task.model.dto.TaskStatusRequest;
 import com.sabadin.taskspringapp.task.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,14 @@ public class TaskController {
     )
     public ResponseEntity<?> createTask(@RequestBody TaskDto request) {
         log.info("called TaskController -> createTask (/api/tasks/task); request -> {}", request);
-        TaskDto result = taskService.createTask(request);
+        TaskDto result = taskService.createNewTask(request);
+        return ResponseEntity.ok(result);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<TaskDto> updateTaskStatus(@PathVariable Long id, @RequestBody TaskStatusRequest dto) {
+        log.info("called TaskController -> updateTaskStatus; id -> {}, status - > {}", id, dto.getStatus());
+        TaskDto result = taskService.updateTaskStatus(id, dto.getStatus());
         return ResponseEntity.ok(result);
     }
 

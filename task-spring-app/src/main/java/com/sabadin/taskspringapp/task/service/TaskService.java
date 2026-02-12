@@ -1,12 +1,14 @@
 package com.sabadin.taskspringapp.task.service;
 
 import com.sabadin.taskspringapp.security.model.entity.User;
+import com.sabadin.taskspringapp.task.exception.TaskNotFoundException;
 import com.sabadin.taskspringapp.task.mapper.TaskCommentMapper;
 import com.sabadin.taskspringapp.task.mapper.TaskMapper;
 import com.sabadin.taskspringapp.task.model.dto.TaskCommentDto;
 import com.sabadin.taskspringapp.task.model.dto.TaskDto;
 import com.sabadin.taskspringapp.task.model.entity.Task;
 import com.sabadin.taskspringapp.task.model.entity.TaskComment;
+import com.sabadin.taskspringapp.task.model.entity.TaskStatus;
 import com.sabadin.taskspringapp.task.repository.TaskCommentRepository;
 import com.sabadin.taskspringapp.task.repository.TaskRepository;
 import com.sabadin.taskspringapp.user.service.UserService;
@@ -33,7 +35,26 @@ public class TaskService {
         return TaskMapper.createFromTaskEntity(task);
     }
 
-    public TaskDto createTask(TaskDto dto) {
+    @Transactional
+    public TaskDto updateTaskStatus(Long taskId, String status) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found: " + taskId));
+        task.setStatus(TaskStatus.from(status));
+        return TaskMapper.createFromTaskEntity(createNewVersionTask(task));
+    }
+
+    private Task createNewVersionTask(Task task) {
+        return Task.builder()
+                .version(task.getVersion() + 1)
+                .createdDate(new Date(System.currentTimeMillis()))
+                .initiator(userService.getCurrentUser())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .executor(task.getExecutor())
+                .status(task.getStatus()).build();
+    }
+
+    public TaskDto createNewTask(TaskDto dto) {
         User initiator = userService.getCurrentUser();
         Task task = TaskMapper.createFromTaskDto(dto);
         task.setVersion(1);
