@@ -3,12 +3,19 @@ package com.sabadin.taskspringapp.team.model.entity;
 import com.sabadin.taskspringapp.common.model.VersionedEntity;
 import com.sabadin.taskspringapp.security.model.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@Entity(name = "tm_teams")
+@Entity
+@Table(name = "tm_teams")
 @Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Team extends VersionedEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
