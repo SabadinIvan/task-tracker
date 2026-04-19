@@ -1,7 +1,9 @@
 package com.sabadin.taskspringapp.security.jwt;
 
+import com.sabadin.taskspringapp.security.model.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +35,18 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        if (user.getFirstName() != null && !user.getFirstName().isBlank()) {
+            claims.put("first_name", user.getFirstName());
+        }
+        if (user.getLastName() != null && !user.getLastName().isBlank()) {
+            claims.put("last_name", user.getLastName());
+        }
+        if (user.getMiddleName() != null && !user.getMiddleName().isBlank()) {
+            claims.put("middle_name", user.getMiddleName());
+        }
+        return generateToken(claims, user);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -78,7 +90,6 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
     }
 }
