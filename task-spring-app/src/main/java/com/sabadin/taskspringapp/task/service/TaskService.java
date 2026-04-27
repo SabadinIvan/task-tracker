@@ -1,5 +1,6 @@
 package com.sabadin.taskspringapp.task.service;
 
+import com.sabadin.taskspringapp.common.model.VersionedEntity;
 import com.sabadin.taskspringapp.security.model.entity.User;
 import com.sabadin.taskspringapp.task.exception.TaskNotFoundException;
 import com.sabadin.taskspringapp.task.mapper.TaskCommentMapper;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,6 +37,12 @@ public class TaskService {
     public TaskDto getTaskDtoById(Long id) {
         Task task = getTask(id);
         return TaskMapper.createFromTaskEntity(task);
+    }
+
+    public List<TaskDto> getTasksByUserTeam() {
+        User user = userService.getCurrentUser();
+        List<Task> taskList = taskRepository.findByTeamId(user.getTeams().stream().map(VersionedEntity::getId).collect(Collectors.toList()));
+        return TaskMapper.createListFromTaskEntities(taskList);
     }
 
     @Transactional
@@ -64,6 +72,13 @@ public class TaskService {
         task.setTeam(team);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.createFromTaskEntity(savedTask);
+    }
+
+    public String createBulkTask(List<TaskDto> dtos) {
+        for (TaskDto dto : dtos) {
+            this.createNewTask(dto);
+        }
+        return "Done!";
     }
 
     public TaskCommentDto createTaskComment(TaskCommentDto dto) {

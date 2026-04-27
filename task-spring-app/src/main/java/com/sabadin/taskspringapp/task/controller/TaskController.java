@@ -8,8 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,6 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class TaskController {
 
     private final TaskService taskService;
+
+    @GetMapping
+    public ResponseEntity<List<TaskDto>> getTasksByUser() {
+        List<TaskDto> result = taskService.getTasksByUserTeam();
+        return ResponseEntity.ok(result);
+    }
 
     @GetMapping("/{id}")
     @Operation(
@@ -56,6 +63,12 @@ public class TaskController {
     public ResponseEntity<TaskCommentDto> createComment(@RequestBody TaskCommentDto request) {
         log.info("called TaskController -> createComment (/api/tasks/comment); request -> {}", request);
         TaskCommentDto result = taskService.createTaskComment(request);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/tasks")
+    public ResponseEntity<String> createBulkTask(@RequestBody List<TaskDto> request) {
+        String result = taskService.createBulkTask(request);
         return ResponseEntity.ok(result);
     }
 }

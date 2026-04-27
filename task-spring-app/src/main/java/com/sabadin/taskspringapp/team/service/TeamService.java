@@ -1,5 +1,6 @@
 package com.sabadin.taskspringapp.team.service;
 
+import com.sabadin.taskspringapp.exceptions.TeamNotFountException;
 import com.sabadin.taskspringapp.security.model.entity.User;
 import com.sabadin.taskspringapp.team.mapper.TeamMapper;
 import com.sabadin.taskspringapp.team.model.dto.TeamResponseDto;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -44,7 +46,14 @@ public class TeamService {
         team.setTitleTeam(user.getLogonName() + "_small_team");
         team.setTypeTeam(TypeTeam.SMALL);
         team.setActive(true);
-        TeamResponseDto teamResponseDto = TeamMapper.createFromTaskEntity(teamRepository.save(team));
-        return teamResponseDto;
+        return TeamMapper.createFromTaskEntity(teamRepository.save(team));
+    }
+
+    public Team getTeamById(long id) {
+        Optional<Team> byId = teamRepository.findById(id);
+        if (byId.isEmpty()) {
+            throw new TeamNotFountException(String.format("Team with id %s does not exist", id));
+        }
+        return byId.get();
     }
 }
