@@ -10,7 +10,8 @@ export const useAuthStore = defineStore('auth', {
         isAuth: localStorage.getItem('isAuth'),
         firstName: localStorage.getItem('firstName'),
         lastName: localStorage.getItem('lastName'),
-        middleName: localStorage.getItem('middleName')
+        middleName: localStorage.getItem('middleName'),
+        teamId: localStorage.getItem('teamId')
     }),
     actions:{
         async register(userDate) {
@@ -48,6 +49,7 @@ export const useAuthStore = defineStore('auth', {
             this.firstName = tokenDecoded.first_name;
             this.lastName = tokenDecoded.last_name;
             this.middleName = tokenDecoded.middle_name;
+            this.teamId = tokenDecoded.teams_id[0];
 
             localStorage.setItem('user', tokenDecoded.sub);
             localStorage.setItem('token', token);
@@ -55,6 +57,7 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem('firstName', tokenDecoded.first_name);
             localStorage.setItem('lastName', tokenDecoded.last_name);
             localStorage.setItem('middleName', tokenDecoded.middle_name);
+            localStorage.setItem('teamId', tokenDecoded.teams_id[0]);
 
             axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
         },
@@ -72,17 +75,26 @@ export const useAuthStore = defineStore('auth', {
             localStorage.removeItem('firstName');
             localStorage.removeItem('lastName');
             localStorage.removeItem('middleName');
+            localStorage.removeItem('teamId');
 
             delete axios.defaults.headers.common['Authorization'];
         },
         showUserData() {
+            console.log('Authorization -> ' + axios.defaults.headers.common['Authorization']);
             console.log('Current user: \n' +
                 'logon -> ' + this.user + ';\n' +
                 'token -> ' + this.token + ';\n' +
                 'first name -> ' + this.firstName + ';\n' +
                 'last name -> ' + this.lastName + ';\n' +
-                'middle name -> ' + this.middleName + ';'
+                'middle name -> ' + this.middleName + ';\n' +
+                'team id -> ' + this.teamId + ';'
             );
+        },
+        getUserName() {
+            return this.user;
+        },
+        getFullUserName() {
+            return this.firstName + ' ' + this.lastName + ' ' + this.middleName;
         }
     }
 });
