@@ -1,19 +1,14 @@
 <template>
-  <div class="main-container">
-    <aside class="sidebar">
-      <div class="sidebar-content">
-        <div class="spacer"></div>
-        <div class="user-info">
-          <div class="user-details">
-            <p class="username">{{ authStore.user }}</p>
-          </div>
-          <button @click="handleLogout" class="logout-btn">
-            Выйти
-          </button>
-        </div>
-      </div>
-    </aside>
+  <Sidebar
+      :user-name="userName"
+      :user-logon="userLogon"
+      @toggle="onSidebarToggle"
+      @filter-change="onFilterChange"
+      @task-created="onTaskCreated"
+      @logout="handleLogout"
+  />
 
+  <div class="main-container">
     <main class="main-content">
       <div class="content-wrapper">
         <DashboardComponent/>
@@ -22,18 +17,71 @@
   </div>
 </template>
 
-<script setup>
-import {useRouter} from "vue-router";
+<script>
 import {useAuthStore} from "@/stores/auth.js";
 import DashboardComponent from "@/components/DashboardComponent.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import taskService from '../services/taskService'
 
-const router = useRouter();
-const authStore = useAuthStore();
+export default {
+  name: 'MainView',
+  components: {Sidebar, DashboardComponent},
+  data() {
+    return {
+      isSidebarCollapsed: false,
+      tasks: [],
+      filters: {
+        search: '',
+        status: '',
+        sortBy: 'date_desc'
+      },
+      userName: '',
+      userLogon: ''
+    }
+  },
+  computed: {},
+  methods: {
+    onSidebarToggle(collapsed) {
+      this.isSidebarCollapsed = collapsed
+    },
+    onFilterChange(filters) {
+      console.log('called onFilterChange; filters -> ' + filters);
+      this.filters = filters
+    },
+    async onTaskCreated(newTask) {
+      console.log('called onTaskCreated; newTask -> ' + newTask);
+      await this.loadTasks()
+    },
+    async loadTasks() {
+      console.log('called loadTasks ....');
+      const result = await taskService.getTasks();
+      if (result.success) {
+        this.tasks = result.data
+      } else {
+        console.error('Ошибка загрузки задач:', result.error)
+      }
+      this.showTasks();
+    },
+    loadUser() {
+      const authStore = useAuthStore();
+      this.userName = authStore.getFullUserName();
+      this.userLogon = authStore.getUserName();
 
-const handleLogout = () => {
-  console.log('called handleLogout...')
-  authStore.logout();
-  router.push('/login');
+    },
+    handleLogout() {
+      console.log('called handleLogout...')
+      const authStore = useAuthStore();
+      authStore.logout();
+      this.$router.push('/login');
+    },
+    showTasks() {
+      console.log(this.tasks);
+    }
+  },
+  mounted() {
+    this.loadUser();
+    this.loadTasks();
+  }
 }
 </script>
 
