@@ -2,15 +2,18 @@ package com.sabadin.taskspringapp.task.model.entity;
 
 import com.sabadin.taskspringapp.common.model.VersionedEntity;
 import com.sabadin.taskspringapp.security.model.entity.User;
+import com.sabadin.taskspringapp.team.model.entity.Team;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "tsk_tasks")
 @Data
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,10 +30,14 @@ public class Task extends VersionedEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "executor_id", nullable = true)
+    @JoinColumn(name = "executor_id")
     private User executor;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private TaskStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 }

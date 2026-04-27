@@ -90,7 +90,7 @@
             <column name="create_by" remarks="Автор создания версии сущности" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
-            <column name="initiator_id" remarks="Внешний идентификатор инициатора задачи" type="java.sql.Types.VARCHAR">
+            <column name="initiator_id" remarks="Внешний идентификатор инициатора задачи" type="java.sql.Types.BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="title" remarks="Наименование (заголовок) задачи" type="java.sql.Types.VARCHAR">
@@ -99,10 +99,13 @@
             <column name="description" remarks="Описание задачи" type="java.sql.Types.VARCHAR">
                 <constraints nullable="false"/>
             </column>
-            <column name="executor_id" remarks="Внешний идентификатор исполнителя задачи" type="java.sql.Types.VARCHAR">
+            <column name="executor_id" remarks="Внешний идентификатор исполнителя задачи" type="java.sql.Types.BIGINT">
                 <constraints nullable="true"/>
             </column>
             <column name="status" remarks="Статус задачи" type="java.sql.Types.VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="team_id" remarks="Внешний идентификатор команды исполниелей" type="java.sql.Types.BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>

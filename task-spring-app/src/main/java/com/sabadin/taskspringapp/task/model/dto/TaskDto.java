@@ -15,4 +15,5 @@ public class TaskDto {
     private String description;
     private UserDto executor;
     private String status;
+    private Long teamId;
 }

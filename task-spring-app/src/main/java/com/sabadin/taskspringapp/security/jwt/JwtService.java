@@ -1,5 +1,6 @@
 package com.sabadin.taskspringapp.security.jwt;
 
+import com.sabadin.taskspringapp.common.model.VersionedEntity;
 import com.sabadin.taskspringapp.security.model.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -45,6 +47,9 @@ public class JwtService {
         }
         if (user.getMiddleName() != null && !user.getMiddleName().isBlank()) {
             claims.put("middle_name", user.getMiddleName());
+        }
+        if (user.getTeams() != null) {
+            claims.put("teams_id", user.getTeams().stream().map(VersionedEntity::getId).collect(Collectors.toList()));
         }
         return generateToken(claims, user);
     }

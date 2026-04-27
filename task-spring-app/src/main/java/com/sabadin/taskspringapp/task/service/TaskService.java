@@ -11,6 +11,8 @@ import com.sabadin.taskspringapp.task.model.entity.TaskComment;
 import com.sabadin.taskspringapp.task.model.entity.TaskStatus;
 import com.sabadin.taskspringapp.task.repository.TaskCommentRepository;
 import com.sabadin.taskspringapp.task.repository.TaskRepository;
+import com.sabadin.taskspringapp.team.model.entity.Team;
+import com.sabadin.taskspringapp.team.service.TeamService;
 import com.sabadin.taskspringapp.user.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final UserService userService;
+    private final TeamService teamService;
     private final TaskCommentRepository taskCommentRepository;
 
     public TaskDto getTaskDtoById(Long id) {
@@ -54,9 +57,11 @@ public class TaskService {
 
     public TaskDto createNewTask(TaskDto dto) {
         User initiator = userService.getCurrentUser();
+        Team team = teamService.getTeamById(dto.getTeamId());
         Task task = TaskMapper.createFromTaskDto(dto);
         task.setVersion(1);
         task.setInitiator(initiator);
+        task.setTeam(team);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.createFromTaskEntity(savedTask);
     }

@@ -31,7 +31,6 @@ public class TaskController {
     }
 
     @PostMapping("/task")
-    @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Создать задачу",
             description = "Данный метод создает новую задачу"
