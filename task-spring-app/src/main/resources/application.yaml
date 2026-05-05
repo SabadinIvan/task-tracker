@@ -6,6 +6,37 @@ spring:
     username: task_admin
     password: kDcRDuba-4ZPfZB
     driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: localhost:9092, localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      Какое максимальное количество попыток отправки сделать
+      retries: 3
+#      properties:
+#       С каким интервалом отправлять отправку (Default 100ms)
+#        retry:
+#          backoff:
+#            ms: 1000
+#       Максимальное время на повторы сообщения (default 120000 ms) Затем TimeoutException
+#        delivery:
+#          timeout:
+#            ms: 60000
+#       Промежуток времени в течение которого накапливаем сеебщения, а затем шлем их одним батчем
+#       (Default 0 - означает, что мы не накапливаем сообщения.ю отправляются по одному)
+#        linger:
+#          ms: 0
+#       Как долго producer ждет ответа от брокера
+#        request:
+#          timwout:
+#            ms: 30000
+#  ВАЖНО
+#  delivery.timeout.ms >= linger.ms + request.timeout.ms
+
+#      acks: 0
+#      batch-size: 16384
+#      buffer-memory: 33554432
+
 #  jpa:
 #    hibernate:
 #      ddl-auto: update
