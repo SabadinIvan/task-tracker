@@ -1,8 +1,8 @@
 package com.sabadin.taskspringapp.security.service;
 
+import com.sabadin.lib.UserAuthEvent;
 import com.sabadin.taskspringapp.aspects.annotation.AuthLog;
-import com.sabadin.taskspringapp.common.constants.TopicsConstants;
-import com.sabadin.taskspringapp.kafka.event.UserAuthEvent;
+import com.sabadin.lib.constant.TopicsConstants;
 import com.sabadin.taskspringapp.security.jwt.JwtService;
 import com.sabadin.taskspringapp.security.model.dto.*;
 import com.sabadin.taskspringapp.security.model.entity.User;
@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse register(RegisterRequest request) {
         User savedUser = userService.createNewUser(request);
         UserAuthEvent userAuthEvent = new UserAuthEvent(savedUser.getId(), savedUser.getEmail(), savedUser.getFirstName(), savedUser.getLastName());
-        sendMessageToBroker(TopicsConstants.USER_CREATED_EVENTS_TOPIC, savedUser.getEmail(), userAuthEvent);
+        sendMessageToBroker(TopicsConstants.USER_REGISTRATION_EVENTS_TOPIC, savedUser.getEmail(), userAuthEvent);
         var jwtToken = jwtService.generateToken(savedUser);
         return new AuthResponse(jwtToken);
     }
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
         );
         User user = (User) authentication.getPrincipal();
         UserAuthEvent userAuthEvent = new UserAuthEvent(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
-        sendMessageToBroker(TopicsConstants.USER_LOGIN_EVENTS_TOPIC, user.getEmail(), userAuthEvent);
+        sendMessageToBroker(TopicsConstants.USER_AUTH_EVENT_TOPIC, user.getEmail(), userAuthEvent);
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)

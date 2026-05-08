@@ -1,6 +1,7 @@
 package com.sabadin.taskspringapp.kafka;
 
-import com.sabadin.taskspringapp.kafka.event.UserAuthEvent;
+import com.sabadin.lib.UserAuthEvent;
+import com.sabadin.lib.constant.TopicsConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -14,7 +15,6 @@ import org.springframework.kafka.core.ProducerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @Configuration
@@ -82,7 +82,7 @@ public class KafkaConfig {
     @Bean
     NewTopic createUserRegistrationTopic() {
         return TopicBuilder
-                .name("user-created-events-topic")
+                .name(TopicsConstants.USER_REGISTRATION_EVENTS_TOPIC)
                 .partitions(3)
                 .replicas(3)
                 .configs(Map.of("min.insync.replicas", "2"))
@@ -92,7 +92,7 @@ public class KafkaConfig {
     @Bean
     NewTopic createUserLoginTopic() {
         return TopicBuilder
-                .name("user-login-event-topic")
+                .name(TopicsConstants.USER_AUTH_EVENT_TOPIC)
                 .partitions(3)
                 .replicas(3)
                 .configs(Map.of("min.insync.replicas", "2"))
