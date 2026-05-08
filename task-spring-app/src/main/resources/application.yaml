@@ -12,28 +12,41 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 #      Какое максимальное количество попыток отправки сделать
-      retries: 3
-#      properties:
+#      retries: 100
+      properties:
+        enable:
+          idempotence: true # по умолчанию true,
+#       если значение acks установить в 5, то значение idempotence неявно перейдет в false
+#       если указать явно acks = 5 а idempotence = true, то будет ошибка Configuration Exception
+#      так же надо указывать занчение perconnection = <= 5
+#       Желательно все параметры указывать явно
+      max:
+        in:
+          flight:
+            requests:
+              per:
+                connection: 5 # максимальное количество запросов без ответов
+
 #       С каким интервалом отправлять отправку (Default 100ms)
 #        retry:
 #          backoff:
 #            ms: 1000
 #       Максимальное время на повторы сообщения (default 120000 ms) Затем TimeoutException
-#        delivery:
-#          timeout:
-#            ms: 60000
+        delivery:
+          timeout:
+            ms: 10000
 #       Промежуток времени в течение которого накапливаем сеебщения, а затем шлем их одним батчем
 #       (Default 0 - означает, что мы не накапливаем сообщения.ю отправляются по одному)
-#        linger:
-#          ms: 0
+        linger:
+          ms: 0
 #       Как долго producer ждет ответа от брокера
-#        request:
-#          timwout:
-#            ms: 30000
+        request:
+          timeout:
+            ms: 5000
 #  ВАЖНО
 #  delivery.timeout.ms >= linger.ms + request.timeout.ms
-
-#      acks: 0
+#      ответ от брокера (0 - не ждем ответа, 1 - от лидера, all - от всех insync реплик)
+      acks: all
 #      batch-size: 16384
 #      buffer-memory: 33554432
 
