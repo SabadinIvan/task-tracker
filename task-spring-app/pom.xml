@@ -125,6 +125,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Для интеграционных тестов с реальной БД -->
         <dependency>
             <groupId>org.testcontainers</groupId>
