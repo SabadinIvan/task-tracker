@@ -50,7 +50,8 @@ public class TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("Task not found: " + taskId));
         task.setStatus(TaskStatus.from(status));
-        return TaskMapper.createFromTaskEntity(createNewVersionTask(task));
+        Task newVersionTask = taskRepository.save(createNewVersionTask(task));
+        return TaskMapper.createFromTaskEntity(newVersionTask);
     }
 
     private Task createNewVersionTask(Task task) {
@@ -74,6 +75,7 @@ public class TaskService {
         return TaskMapper.createFromTaskEntity(savedTask);
     }
 
+    // ToDo remove this method
     public String createBulkTask(List<TaskDto> dtos) {
         for (TaskDto dto : dtos) {
             this.createNewTask(dto);

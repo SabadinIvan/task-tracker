@@ -26,7 +26,7 @@ public enum TaskStatus {
             return NEW;
         }
         for (TaskStatus value : values()) {
-            if (value.getTitle().equals(title)) {
+            if (value.getTitle().equalsIgnoreCase(title)) {
                 return value;
             }
         }
