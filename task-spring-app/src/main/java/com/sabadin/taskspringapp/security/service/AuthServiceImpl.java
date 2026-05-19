@@ -3,6 +3,7 @@ package com.sabadin.taskspringapp.security.service;
 import com.sabadin.lib.UserAuthEvent;
 import com.sabadin.taskspringapp.aspects.annotation.AuthLog;
 import com.sabadin.lib.constant.TopicsConstants;
+import com.sabadin.taskspringapp.aspects.annotation.LogExecutionTime;
 import com.sabadin.taskspringapp.security.jwt.JwtService;
 import com.sabadin.taskspringapp.security.model.dto.*;
 import com.sabadin.taskspringapp.security.model.entity.User;
@@ -29,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final KafkaTemplate<String, UserAuthEvent> kafkaTemplate;
 
     @AuthLog
+    @LogExecutionTime
     public AuthResponse register(RegisterRequest request) {
         User savedUser = userService.createNewUser(request);
         UserAuthEvent userAuthEvent = new UserAuthEvent(savedUser.getId(), savedUser.getEmail(), savedUser.getFirstName(), savedUser.getLastName());
@@ -38,6 +40,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @AuthLog(showArgs = false)
+    @LogExecutionTime
     public AuthResponse authenticate(AuthRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
