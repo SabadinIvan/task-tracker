@@ -105,6 +105,13 @@ services:
       - kafta-data-3:/var/lib/kafka/data
     networks:
       - app-network
+  request-generator-app:
+    container_name: request-generator-app
+    build: ./request-generator
+    ports:
+      - "8090:8090"
+    networks:
+      - app-network
   redis-1:
     image: redis:latest
     container_name: redis-1
