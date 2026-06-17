@@ -1,0 +1,78 @@
+spring:
+  application:
+    name: app-spring
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_task
+    username: task_admin
+    password: kDcRDuba-4ZPfZB
+    driver-class-name: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: localhost:9092, localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+#      Какое максимальное количество попыток отправки сделать
+#      retries: 100
+      properties:
+        enable:
+          idempotence: true # по умолчанию true,
+#       если значение acks установить в 5, то значение idempotence неявно перейдет в false
+#       если указать явно acks = 5 а idempotence = true, то будет ошибка Configuration Exception
+#      так же надо указывать занчение perconnection = <= 5
+#       Желательно все параметры указывать явно
+#      max:
+#        in:
+#          flight:
+#            requests:
+#              per:
+#                connection: 5 # максимальное количество запросов без ответов
+
+#       С каким интервалом отправлять отправку (Default 100ms)
+#        retry:
+#          backoff:
+#            ms: 1000
+#       Максимальное время на повторы сообщения (default 120000 ms) Затем TimeoutException
+        delivery:
+          timeout:
+            ms: 10000
+#       Промежуток времени в течение которого накапливаем сеебщения, а затем шлем их одним батчем
+#       (Default 0 - означает, что мы не накапливаем сообщения.ю отправляются по одному)
+        linger:
+          ms: 0
+#       Как долго producer ждет ответа от брокера
+        request:
+          timeout:
+            ms: 5000
+#  ВАЖНО
+#  delivery.timeout.ms >= linger.ms + request.timeout.ms
+#      ответ от брокера (0 - не ждем ответа, 1 - от лидера, all - от всех insync реплик)
+      acks: all
+#      batch-size: 16384
+#      buffer-memory: 33554432
+
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      ddl-auto: create
+#      show-sql: true
+application:
+  security:
+    jwt:
+      secret-key: zjfDqx2yHCcB8rI0yqdmBdOuWd6cR2JuoTXLNy7Z30a
+      # in milliseconds (24 hours)
+      expiration: 86400000
+      # in milliseconds (5 mins)
+#      expiration: 300000
+      refresh-token: 604800000
+
+# Базовые настройки и настройки документации openapi
+springdoc:
+  openapi:
+    dev-url: http://localhost:8080
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none

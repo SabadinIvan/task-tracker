@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_task_tracker
+    username: tk_tr_admin
+    password: oedYU-asgO7zUD9
